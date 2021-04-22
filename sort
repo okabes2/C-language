@@ -1,0 +1,143 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+int * GetRandomArray (const int);
+int **QSrtPtr(int *[]);
+void QuickSort (int * [], const int, const int);
+int Partition(int *[], const int, const int);
+void Swap(int **x, int **y );
+int findArraySize(int * []);
+void ShowArrPtr(int *[]);
+ 
+int main()
+{
+    // create random num for array size
+    int randomSize = rand()%90+10;
+    
+    // create randomArray
+    int * randomArray  = GetRandomArray (randomSize);
+      
+    //decleare ptr array 
+    int ** ptrArray = malloc((randomSize+1) * sizeof(int*));
+    ptrArray[randomSize]=NULL;
+  
+    // is this making the last element null?
+    for(int i=0; i < randomSize; i++) { ptrArray[i] = &randomArray[i];}
+    // copy and sorting
+    int ** ptrArray2 = QSrtPtr(ptrArray);
+   
+    
+    printf("Size of array is %d\n",findArraySize(ptrArray));
+   
+    //print out before sorting
+    printf("\nthis is before sorting\n");
+    ShowArrPtr(ptrArray);
+    
+     // print out after sorting
+        printf("this is after sorting \n");
+    ShowArrPtr(ptrArray2);
+    
+    
+    free(ptrArray);
+    free(ptrArray2);
+   
+    return 0;
+}
+
+int findArraySize(int* array []){//1.find size of array
+    int i=0;
+    while(array[i]!=NULL){
+    i++;
+    }
+    
+    return i;
+}
+
+
+
+// get randomArray
+int * GetRandomArray  ( int arraySize){
+
+    int * array = malloc(arraySize * sizeof(int));
+
+    for (int i = 0; i < arraySize; i++) { array[i] = rand()%1000+20;}
+    
+     return array;
+}
+
+//copy and sorting method
+int ** QSrtPtr(int * arrayPtr[]){
+ int randomSize=findArraySize(arrayPtr);
+    int ** ptrArray2 = malloc((randomSize+1)*sizeof(int*));
+    ptrArray2[randomSize]=NULL;
+
+   for(int i = 0; i < randomSize+1; i++){
+        
+      ptrArray2[i] = arrayPtr[i];
+      
+   }
+  
+    
+    QuickSort(ptrArray2, 0, randomSize-1);
+    
+    return ptrArray2;
+}
+
+// sort 
+void QuickSort(int *sortArray[], int p, int r){
+    int pivot;
+    if(p < r){
+
+        pivot = Partition (sortArray, p, r);
+
+        QuickSort(sortArray, p, pivot-1);
+        QuickSort(sortArray, pivot+1, r);
+    }
+}
+
+// 
+int Partition(int *partitionArray[], int p, int r){
+  int i, j, pivot;
+ 
+  pivot = *partitionArray[r];
+  i = p - 1;
+
+  for(j = p; j <= r-1; j++){
+
+      if(*partitionArray[j] <= pivot){
+        i++;
+       Swap( &partitionArray[i], &partitionArray[j]);
+      }
+  }
+
+ Swap( &partitionArray[i+1],&partitionArray[r]);
+ 
+ return i+1;
+}
+
+// swap
+void Swap(int **x, int **y){
+    
+    int *temp;
+    
+    temp = *x;
+    *x = *y;
+    *y = temp;
+}
+
+//showing the result
+void ShowArrPtr(int *ptrArray[]){
+int i = 0;
+
+    while(ptrArray[i] != NULL){
+        printf("%d,",*ptrArray[i]);
+        i++;
+    }
+    printf("\n\n");
+}
+
+
+
+
